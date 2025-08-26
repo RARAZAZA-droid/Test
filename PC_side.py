@@ -8,6 +8,23 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import math
 import numpy as np
 
+# Set modern theme for PySimpleGUI
+sg.theme('DarkBlue3')
+
+# Modern color scheme
+COLORS = {
+    'primary': '#1e3a8a',      # Deep blue
+    'secondary': '#3b82f6',    # Bright blue
+    'accent': '#06d6a0',       # Teal green
+    'warning': '#f59e0b',      # Amber
+    'danger': '#ef4444',       # Red
+    'success': '#10b981',      # Emerald
+    'background': '#f8fafc',   # Light gray
+    'surface': '#ffffff',      # White
+    'text_primary': '#1f2937', # Dark gray
+    'text_secondary': '#6b7280' # Medium gray
+}
+
 light_epsilon = 0.3
 object_light_epsilon = 0.3
 
@@ -62,8 +79,6 @@ object_light_epsilon = 0.3
 #             draw_scanner_map(distance_arr, degree_arr)
 #             window["-SCAN-"].update(disabled=False)
 #             window["-BACK-"].update(disabled=False)
-
-#     window.close()
 
 # def objects_detector():
 
@@ -146,17 +161,34 @@ object_light_epsilon = 0.3
 
 
 def objects_detector():
-
     layout = [
-        [sg.Text("Enter Masking Distance [cm]:", text_color='#000000', background_color='#9AF1FF',
-                 font=('Segoe UI', 10)),
-         sg.InputText(key="-DISTANCE-", size=(20, 1))],
-        [sg.Button("Start Objects Scan", key="-SCAN-", button_color='#000000'),
-         sg.Button("Back", key="-BACK-", button_color='#000000')],
-        [sg.Output(key="-OUTPUT-", size=(45, 5))]
+        [sg.Text("🎯 Object Detection System", font=('Segoe UI', 18, 'bold'), 
+                 text_color=COLORS['primary'], justification='center', expand_x=True, pad=(0, 20))],
+        [sg.Frame('Configuration', [
+            [sg.Text("Masking Distance [cm]:", font=('Segoe UI', 12), text_color=COLORS['text_primary']),
+             sg.Push(),
+             sg.InputText(key="-DISTANCE-", size=(15, 1), font=('Segoe UI', 12), 
+                         border_width=2, pad=(10, 0))]
+        ], font=('Segoe UI', 12, 'bold'), title_color=COLORS['secondary'], 
+           border_width=2, relief='solid', pad=(20, 15))],
+        [sg.VPush()],
+        [sg.Button("🔍 Start Objects Scan", key="-SCAN-", size=(20, 2), 
+                   font=('Segoe UI', 12, 'bold'), button_color=(COLORS['surface'], COLORS['success']),
+                   border_width=0, pad=(10, 10)),
+         sg.Push(),
+         sg.Button("← Back", key="-BACK-", size=(12, 2), 
+                   font=('Segoe UI', 12), button_color=(COLORS['surface'], COLORS['text_secondary']),
+                   border_width=0, pad=(10, 10))],
+        [sg.VPush()],
+        [sg.Frame('Scan Results', [
+            [sg.Output(key="-OUTPUT-", size=(60, 12), font=('Consolas', 10), 
+                      text_color=COLORS['text_primary'], background_color=COLORS['surface'])]
+        ], font=('Segoe UI', 12, 'bold'), title_color=COLORS['secondary'], 
+           border_width=2, relief='solid', pad=(20, 15), expand_x=True)]
     ]
-    window = sg.Window("Objects Detector System", layout, background_color='#9AF1FF', font=('Segoe UI', 10),
-                       resizable=True, return_keyboard_events=True, finalize=True)
+    window = sg.Window("Objects Detector System", layout, size=(800, 700), 
+                       resizable=True, return_keyboard_events=True, finalize=True,
+                       element_justification='center', margins=(30, 30))
     window.bind("<Escape>", "-ESCAPE-")
 
     while True:
@@ -263,16 +295,37 @@ def telemeter():
     dynamic_flag = 0
 
     layout = [
-        [sg.Text("Angle [0°-180°]:", text_color='#000000', background_color='#9AF1FF', font=('Segoe UI', 10)),
-         sg.InputText(key="-ANGLE-", size=(20, 1))],
-        [sg.Button("Start Measure", key="-START-", button_color='#000000'),
-         sg.Button("Stop Measure", key="-STOP-", button_color='#000000'),
-         sg.Button("Back", key="-BACK-", button_color='#000000')],
-        [sg.Output(key="-OUTPUT-", size=(30, 2))]
+        [sg.Text("📐 Telemeter System", font=('Segoe UI', 18, 'bold'), 
+                 text_color=COLORS['primary'], justification='center', expand_x=True, pad=(0, 20))],
+        [sg.Frame('Angle Configuration', [
+            [sg.Text("Target Angle [0° - 180°]:", font=('Segoe UI', 12), text_color=COLORS['text_primary']),
+             sg.Push(),
+             sg.InputText(key="-ANGLE-", size=(15, 1), font=('Segoe UI', 12), 
+                         border_width=2, pad=(10, 0), justification='center')]
+        ], font=('Segoe UI', 12, 'bold'), title_color=COLORS['secondary'], 
+           border_width=2, relief='solid', pad=(20, 15))],
+        [sg.VPush()],
+        [sg.Button("▶️ Start Measure", key="-START-", size=(15, 2), 
+                   font=('Segoe UI', 12, 'bold'), button_color=(COLORS['surface'], COLORS['success']),
+                   border_width=0, pad=(10, 10)),
+         sg.Button("⏹️ Stop Measure", key="-STOP-", size=(15, 2), 
+                   font=('Segoe UI', 12, 'bold'), button_color=(COLORS['surface'], COLORS['danger']),
+                   border_width=0, pad=(10, 10), disabled=True),
+         sg.Push(),
+         sg.Button("← Back", key="-BACK-", size=(12, 2), 
+                   font=('Segoe UI', 12), button_color=(COLORS['surface'], COLORS['text_secondary']),
+                   border_width=0, pad=(10, 10))],
+        [sg.VPush()],
+        [sg.Frame('Measurement Results', [
+            [sg.Output(key="-OUTPUT-", size=(60, 8), font=('Consolas', 11), 
+                      text_color=COLORS['text_primary'], background_color=COLORS['surface'])]
+        ], font=('Segoe UI', 12, 'bold'), title_color=COLORS['secondary'], 
+           border_width=2, relief='solid', pad=(20, 15), expand_x=True)]
     ]
 
-    window = sg.Window("Telemeter", layout, background_color='#9AF1FF', font=('Segoe UI', 10), resizable=True,
-                       return_keyboard_events=True, finalize=True)
+    window = sg.Window("Telemeter", layout, size=(750, 600), resizable=True,
+                       return_keyboard_events=True, finalize=True,
+                       element_justification='center', margins=(30, 30))
     window.bind("<Escape>", "-ESCAPE-")
 
     while True:
@@ -312,18 +365,39 @@ def telemeter():
 
 def lights_detector():
     layout = [
-        [sg.Button("Start Light Sources Scan", key="-SCAN-", size=(40, 1), button_color='#000000'),
-         sg.Button("Calibrate Using PB0", key="-CALIBRATE-", button_color='#000000'),
-         sg.Button("Back", key="-BACK-", button_color='#000000')],
-        [sg.ProgressBar(10, orientation='h', expand_x=True, size=(20, 20), bar_color=('#FFFFFF', '#F0BC00'),
-                        key='-PBAR-')],
-        [sg.Text(' ', key='-OUT-', enable_events=True, text_color='#000000', background_color='#F0BC00',
-                 font=('Segoe UI', 10), justification='center', expand_x=True)],
-        [sg.Output(key="-OUTPUT-", size=(80, 3))]
-
+        [sg.Text("💡 Light Sources Detector", font=('Segoe UI', 18, 'bold'), 
+                 text_color=COLORS['primary'], justification='center', expand_x=True, pad=(0, 20))],
+        [sg.Frame('Actions', [
+            [sg.Button("🔍 Start Light Sources Scan", key="-SCAN-", size=(25, 2), 
+                       font=('Segoe UI', 12, 'bold'), button_color=(COLORS['surface'], COLORS['warning']),
+                       border_width=0, pad=(10, 10))],
+            [sg.Button("⚙️ Calibrate Using PB0", key="-CALIBRATE-", size=(25, 2), 
+                       font=('Segoe UI', 12, 'bold'), button_color=(COLORS['surface'], COLORS['accent']),
+                       border_width=0, pad=(10, 10))],
+            [sg.Button("← Back", key="-BACK-", size=(25, 2), 
+                       font=('Segoe UI', 12), button_color=(COLORS['surface'], COLORS['text_secondary']),
+                       border_width=0, pad=(10, 10))]
+        ], font=('Segoe UI', 12, 'bold'), title_color=COLORS['secondary'], 
+           border_width=2, relief='solid', pad=(20, 15), element_justification='center')],
+        [sg.VPush()],
+        [sg.Frame('Calibration Progress', [
+            [sg.ProgressBar(10, orientation='h', expand_x=True, size=(50, 25), 
+                           bar_color=(COLORS['warning'], COLORS['background']), key='-PBAR-',
+                           border_width=2, relief='solid')],
+            [sg.Text('Ready to calibrate', key='-OUT-', font=('Segoe UI', 12), 
+                     text_color=COLORS['text_primary'], justification='center', expand_x=True, pad=(0, 10))]
+        ], font=('Segoe UI', 12, 'bold'), title_color=COLORS['secondary'], 
+           border_width=2, relief='solid', pad=(20, 15))],
+        [sg.VPush()],
+        [sg.Frame('Detection Results', [
+            [sg.Output(key="-OUTPUT-", size=(80, 10), font=('Consolas', 10), 
+                      text_color=COLORS['text_primary'], background_color=COLORS['surface'])]
+        ], font=('Segoe UI', 12, 'bold'), title_color=COLORS['secondary'], 
+           border_width=2, relief='solid', pad=(20, 15), expand_x=True)]
     ]
-    window = sg.Window("Light Sources Detector System", layout, background_color='#F0BC00', font=('Segoe UI', 10),
-                       resizable=True, return_keyboard_events=True, finalize=True)
+    window = sg.Window("Light Sources Detector System", layout, size=(900, 750),
+                       resizable=True, return_keyboard_events=True, finalize=True,
+                       element_justification='center', margins=(30, 30))
     window.bind("<Escape>", "-ESCAPE-")
 
     while True:
@@ -435,17 +509,37 @@ def lights_detector():
 
 def light_objects_detector():
     layout = [
-        [sg.Text("Masking Distance [cm]:", text_color='#000000', background_color='#F0BC00', font=('Segoe UI', 10)),
-         sg.InputText(key="-DISTANCE-", size=(20, 1))],
-        [sg.Text("Masking range for lights is 0.5 meter", text_color='#000000', background_color='#F0BC00',
-                 font=('Segoe UI', 10))],
-        [sg.Button("Start Lights & Object Scan", key="-LIGHT-OBJECT_DETECT-", size=(45, 1), button_color='#000000'),
-         sg.Button("Back", key="-BACK-", button_color='#000000')],
-        [sg.Output(key="-OUTPUT-", size=(80, 3))]
+        [sg.Text("🔍💡 Light Sources & Objects Detector", font=('Segoe UI', 18, 'bold'), 
+                 text_color=COLORS['primary'], justification='center', expand_x=True, pad=(0, 20))],
+        [sg.Frame('Configuration', [
+            [sg.Text("Object Masking Distance [cm]:", font=('Segoe UI', 12), text_color=COLORS['text_primary']),
+             sg.Push(),
+             sg.InputText(key="-DISTANCE-", size=(15, 1), font=('Segoe UI', 12), 
+                         border_width=2, pad=(10, 0), justification='center')],
+            [sg.Text("💡 Note: Light masking range is fixed at 0.5 meter", 
+                     font=('Segoe UI', 10, 'italic'), text_color=COLORS['text_secondary'], 
+                     justification='center', expand_x=True, pad=(0, 10))]
+        ], font=('Segoe UI', 12, 'bold'), title_color=COLORS['secondary'], 
+           border_width=2, relief='solid', pad=(20, 15))],
+        [sg.VPush()],
+        [sg.Button("🚀 Start Combined Scan", key="-LIGHT-OBJECT_DETECT-", size=(25, 2), 
+                   font=('Segoe UI', 12, 'bold'), button_color=(COLORS['surface'], COLORS['warning']),
+                   border_width=0, pad=(10, 10)),
+         sg.Push(),
+         sg.Button("← Back", key="-BACK-", size=(12, 2), 
+                   font=('Segoe UI', 12), button_color=(COLORS['surface'], COLORS['text_secondary']),
+                   border_width=0, pad=(10, 10))],
+        [sg.VPush()],
+        [sg.Frame('Scan Results', [
+            [sg.Output(key="-OUTPUT-", size=(85, 12), font=('Consolas', 10), 
+                      text_color=COLORS['text_primary'], background_color=COLORS['surface'])]
+        ], font=('Segoe UI', 12, 'bold'), title_color=COLORS['secondary'], 
+           border_width=2, relief='solid', pad=(20, 15), expand_x=True)]
     ]
 
-    window = sg.Window("Light Sources and Objects Detector System", layout, background_color='#F0BC00',
-                       font=('Segoe UI', 10), resizable=True, return_keyboard_events=True, finalize=True)
+    window = sg.Window("Light Sources and Objects Detector System", layout, size=(950, 700),
+                       resizable=True, return_keyboard_events=True, finalize=True,
+                       element_justification='center', margins=(30, 30))
     window.bind("<Escape>", "-ESCAPE-")
 
     while True:
@@ -549,41 +643,77 @@ def script_mode():
     global window
     working_directory = "C:\\Users\\97254\\Desktop\\code\\python_vs\\Scripts"
 
-    layout = [
-        [sg.Radio("Script File", "RADIO1", key="-SCRIPT-", default=True, text_color='#000000', background_color="#F0BC00"),
-         sg.Radio("Text File", "RADIO1", key="-TEXT-", text_color='#000000', background_color="#F0BC00")],
-        [sg.Text("Choose a TXT file to upload:", text_color='#000000', background_color="#F0BC00",
-                 font=('Segoe UI', 10))],
-        [sg.InputText(key="-FILE_PATH-", size=(70, 1)),
-         sg.FileBrowse(initial_folder=working_directory, file_types=[("text Files", "*.txt")], button_color='#000000')],
-        [sg.Button("Upload Script1", key="-UPLOAD1-", button_color='#000000'),
-         sg.Button("Play Script1", key="-PLAY1-", button_color='#000000')],
-        [sg.Button("Upload Script2", key="-UPLOAD2-", button_color='#000000'),
-         sg.Button("Play Script2", key="-PLAY2-", button_color='#000000')],
-        [sg.Button("Upload Script3", key="-UPLOAD3-", button_color='#000000'),
-         sg.Button("Play Script3", key="-PLAY3-", button_color='#000000')],
-        [sg.Button("Upload Script4", key="-UPLOAD4-", button_color='#000000'),
-         sg.Button("Play Script4", key="-PLAY4-", button_color='#000000')],
-        [sg.Button("Upload Script5", key="-UPLOAD5-", button_color='#000000'),
-         sg.Button("Play Script5", key="-PLAY5-", button_color='#000000')],
-        [sg.Button("Upload Script6", key="-UPLOAD6-", button_color='#000000'),
-         sg.Button("Play Script6", key="-PLAY6-", button_color='#000000')],
-        [sg.Button("Upload Script7", key="-UPLOAD7-", button_color='#000000'),
-         sg.Button("Play Script7", key="-PLAY7-", button_color='#000000')],
-        [sg.Button("Upload Script8", key="-UPLOAD8-", button_color='#000000'),
-         sg.Button("Play Script8", key="-PLAY8-", button_color='#000000')],
-        [sg.Button("Upload Script9", key="-UPLOAD9-", button_color='#000000'),
-         sg.Button("Play Script9", key="-PLAY9-", button_color='#000000')],
-        [sg.Button("Upload Script10", key="-UPLOAD10-", button_color='#000000'),
-         sg.Button("Play Script10", key="-PLAY10-", button_color='#000000')],
-        [sg.Exit(button_color='#000000', key="-BACK-")],
-        [sg.Text(key='Script Transferred', text_color='#000000', background_color='#F0BC00', font=('Segoe UI', 10))],
-        [sg.Output(key="-OUTPUT-", size=(75, 5))]
+    # Create script slots in a simpler grid layout
+    script_row1 = []
+    script_row2 = []
+    
+    for i in range(1, 6):  # Scripts 1-5
+        script_row1.append(
+            sg.Column([
+                [sg.Text(f"Script {i}", font=('Segoe UI', 10, 'bold'), 
+                        text_color=COLORS['text_primary'], justification='center')],
+                [sg.Button(f"📤 Upload", key=f"-UPLOAD{i}-", size=(12, 1), 
+                          font=('Segoe UI', 9), button_color=(COLORS['surface'], COLORS['accent']),
+                          border_width=0)],
+                [sg.Button(f"▶️ Play", key=f"-PLAY{i}-", size=(12, 1), 
+                          font=('Segoe UI', 9), button_color=(COLORS['surface'], COLORS['success']),
+                          border_width=0)]
+            ], element_justification='center', pad=(10, 5))
+        )
+    
+    for i in range(6, 11):  # Scripts 6-10
+        script_row2.append(
+            sg.Column([
+                [sg.Text(f"Script {i}", font=('Segoe UI', 10, 'bold'), 
+                        text_color=COLORS['text_primary'], justification='center')],
+                [sg.Button(f"📤 Upload", key=f"-UPLOAD{i}-", size=(12, 1), 
+                          font=('Segoe UI', 9), button_color=(COLORS['surface'], COLORS['accent']),
+                          border_width=0)],
+                [sg.Button(f"▶️ Play", key=f"-PLAY{i}-", size=(12, 1), 
+                          font=('Segoe UI', 9), button_color=(COLORS['surface'], COLORS['success']),
+                          border_width=0)]
+            ], element_justification='center', pad=(10, 5))
+        )
 
+    layout = [
+        [sg.Text("📜 Script Management System", font=('Segoe UI', 18, 'bold'), 
+                 text_color=COLORS['primary'], justification='center', expand_x=True, pad=(0, 20))],
+        [sg.Frame('File Configuration', [
+            [sg.Radio("📜 Script File", "RADIO1", key="-SCRIPT-", default=True, 
+                     font=('Segoe UI', 11), text_color=COLORS['text_primary']),
+             sg.Radio("📄 Text File", "RADIO1", key="-TEXT-", 
+                     font=('Segoe UI', 11), text_color=COLORS['text_primary'])],
+            [sg.Text("Choose a TXT file to upload:", font=('Segoe UI', 11), 
+                     text_color=COLORS['text_primary'])],
+            [sg.InputText(key="-FILE_PATH-", size=(60, 1), font=('Segoe UI', 11)),
+             sg.FileBrowse("Browse", initial_folder=working_directory, 
+                          file_types=[("text Files", "*.txt")], 
+                          button_color=(COLORS['surface'], COLORS['secondary']),
+                          font=('Segoe UI', 11), border_width=0, size=(10, 1))]
+        ], font=('Segoe UI', 12, 'bold'), title_color=COLORS['secondary'], 
+           border_width=2, relief='solid', pad=(20, 15))],
+        [sg.VPush()],
+        [sg.Frame('Script Slots', [
+            script_row1,
+            script_row2
+        ], font=('Segoe UI', 12, 'bold'), title_color=COLORS['secondary'], 
+           border_width=2, relief='solid', pad=(20, 15), element_justification='center')],
+        [sg.VPush()],
+        [sg.Button("← Back", key="-BACK-", size=(15, 2), 
+                   font=('Segoe UI', 12), button_color=(COLORS['surface'], COLORS['text_secondary']),
+                   border_width=0, pad=(10, 10))],
+        [sg.Frame('Status & Logs', [
+            [sg.Text('Ready', key='Script Transferred', font=('Segoe UI', 12, 'bold'), 
+                     text_color=COLORS['success'], justification='center', expand_x=True, pad=(0, 10))],
+            [sg.Output(key="-OUTPUT-", size=(90, 8), font=('Consolas', 10), 
+                      text_color=COLORS['text_primary'], background_color=COLORS['surface'])]
+        ], font=('Segoe UI', 12, 'bold'), title_color=COLORS['secondary'], 
+           border_width=2, relief='solid', pad=(20, 15), expand_x=True)]
     ]
 
-    window = sg.Window("Upload File", layout, background_color='#F0BC00', font=('Segoe UI', 10), resizable=True,
-                       return_keyboard_events=True, finalize=True)
+    window = sg.Window("Script Management System", layout, size=(1000, 800), resizable=True,
+                       return_keyboard_events=True, finalize=True,
+                       element_justification='center', margins=(30, 30))
     window.bind("<Escape>", "-ESCAPE-")
 
     while True:
@@ -1203,30 +1333,56 @@ def draw_scanner_map(pos_arr):
 def main():
     global s
 
-    MenuLayout = [[sg.Button('', image_filename='Menu Buttons/button1.png',
-                             button_color=(sg.theme_background_color(), sg.theme_background_color()), border_width=0,
-                             key='Object Detector System'),
-                   sg.Button('', image_filename='Menu Buttons/button2.png',
-                             button_color=(sg.theme_background_color(), sg.theme_background_color()), border_width=0,
-                             key='Telemeter'),
-                   sg.Button('', image_filename='Menu Buttons/button3.png',
-                             button_color=(sg.theme_background_color(), sg.theme_background_color()), border_width=0,
-                             key='Light Sources Detector System'),
-                   ],
-                  [sg.Button('', image_filename='Menu Buttons/button4.png',
-                             button_color=(sg.theme_background_color(), sg.theme_background_color()), border_width=0,
-                             key='Light Sources and Objects Detector System'),
-                   sg.Button('', image_filename='Menu Buttons/button5.png',
-                             button_color=(sg.theme_background_color(), sg.theme_background_color()), border_width=0,
-                             key='Script Mode'),
-                   sg.Button('', image_filename='Menu Buttons/button6.png',
-                             button_color=(sg.theme_background_color(), sg.theme_background_color()), border_width=0,
-                             key='Exit'),
-                   ],
-                  [sg.Text("© Arthur sits on dick and eats cake with dick", justification='left', font=('Segoe UI', 8))]
-                  ]
-    window = sg.Window("Light Source and Object Proximity Detector System", MenuLayout, background_color='#F0BC00',
-                       font=('Segoe UI', 14))
+    # Create modern menu layout with cards
+    MenuLayout = [
+        [sg.Text("🔬 Advanced Detection & Analysis System", 
+                font=('Segoe UI', 24, 'bold'), text_color=COLORS['primary'], 
+                justification='center', expand_x=True, pad=(0, 30))],
+        [sg.Text("Professional grade proximity detection and environmental scanning", 
+                font=('Segoe UI', 12, 'italic'), text_color=COLORS['text_secondary'], 
+                justification='center', expand_x=True, pad=(0, 20))],
+        [sg.HSeparator(color=COLORS['secondary'], pad=(50, 20))],
+        
+        # First row of cards
+        [sg.VPush()],
+        [sg.Button("🎯\nObject Detection\nSystem", key='Object Detector System', 
+                  size=(18, 4), font=('Segoe UI', 12, 'bold'), 
+                  button_color=(COLORS['surface'], COLORS['primary']),
+                  border_width=3, pad=(15, 10)),
+         sg.Button("📐\nTelemeter\nMeasurement", key='Telemeter', 
+                  size=(18, 4), font=('Segoe UI', 12, 'bold'), 
+                  button_color=(COLORS['surface'], COLORS['secondary']),
+                  border_width=3, pad=(15, 10)),
+         sg.Button("💡\nLight Sources\nDetector", key='Light Sources Detector System', 
+                  size=(18, 4), font=('Segoe UI', 12, 'bold'), 
+                  button_color=(COLORS['surface'], COLORS['warning']),
+                  border_width=3, pad=(15, 10))],
+        
+        # Second row of cards
+        [sg.VPush()],
+        [sg.Button("🔍💡\nCombined\nDetection", key='Light Sources and Objects Detector System', 
+                  size=(18, 4), font=('Segoe UI', 12, 'bold'), 
+                  button_color=(COLORS['surface'], COLORS['accent']),
+                  border_width=3, pad=(15, 10)),
+         sg.Button("📜\nScript\nManagement", key='Script Mode', 
+                  size=(18, 4), font=('Segoe UI', 12, 'bold'), 
+                  button_color=(COLORS['surface'], COLORS['success']),
+                  border_width=3, pad=(15, 10)),
+         sg.Button("🚪\nExit\nApplication", key='Exit', 
+                  size=(18, 4), font=('Segoe UI', 12, 'bold'), 
+                  button_color=(COLORS['surface'], COLORS['danger']),
+                  border_width=3, pad=(15, 10))],
+        
+        [sg.VPush()],
+        [sg.HSeparator(color=COLORS['secondary'], pad=(50, 20))],
+        [sg.Text("© 2024 Advanced Detection Systems | Professional Engineering Solution", 
+                justification='center', font=('Segoe UI', 9), text_color=COLORS['text_secondary'],
+                expand_x=True, pad=(0, 15))]
+    ]
+    
+    window = sg.Window("Advanced Detection & Analysis System", MenuLayout, 
+                       size=(950, 650), element_justification='center',
+                       margins=(40, 30), resizable=True, finalize=True)
     init_uart()
     send_command('Z')
     msp_calib_arr = []
