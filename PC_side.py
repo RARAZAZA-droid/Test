@@ -643,39 +643,37 @@ def script_mode():
     global window
     working_directory = "C:\\Users\\97254\\Desktop\\code\\python_vs\\Scripts"
 
-    # Create script slot grid
-    script_slots = []
-    for i in range(1, 11):
-        if i <= 5:  # First row (scripts 1-5)
-            if i == 1:
-                script_slots.append([])
-            script_slots[0].extend([
-                sg.Column([
-                    [sg.Text(f"Script {i}", font=('Segoe UI', 10, 'bold'), 
-                            text_color=COLORS['text_primary'], justification='center')],
-                    [sg.Button(f"📤 Upload", key=f"-UPLOAD{i}-", size=(12, 1), 
-                              font=('Segoe UI', 9), button_color=(COLORS['surface'], COLORS['accent']),
-                              border_width=0)],
-                    [sg.Button(f"▶️ Play", key=f"-PLAY{i}-", size=(12, 1), 
-                              font=('Segoe UI', 9), button_color=(COLORS['surface'], COLORS['success']),
-                              border_width=0)]
-                ], element_justification='center', pad=(10, 5))
-            ])
-        else:  # Second row (scripts 6-10)
-            if i == 6:
-                script_slots.append([])
-            script_slots[1].extend([
-                sg.Column([
-                    [sg.Text(f"Script {i}", font=('Segoe UI', 10, 'bold'), 
-                            text_color=COLORS['text_primary'], justification='center')],
-                    [sg.Button(f"📤 Upload", key=f"-UPLOAD{i}-", size=(12, 1), 
-                              font=('Segoe UI', 9), button_color=(COLORS['surface'], COLORS['accent']),
-                              border_width=0)],
-                    [sg.Button(f"▶️ Play", key=f"-PLAY{i}-", size=(12, 1), 
-                              font=('Segoe UI', 9), button_color=(COLORS['surface'], COLORS['success']),
-                              border_width=0)]
-                ], element_justification='center', pad=(10, 5))
-            ])
+    # Create script slots in a simpler grid layout
+    script_row1 = []
+    script_row2 = []
+    
+    for i in range(1, 6):  # Scripts 1-5
+        script_row1.append(
+            sg.Column([
+                [sg.Text(f"Script {i}", font=('Segoe UI', 10, 'bold'), 
+                        text_color=COLORS['text_primary'], justification='center')],
+                [sg.Button(f"📤 Upload", key=f"-UPLOAD{i}-", size=(12, 1), 
+                          font=('Segoe UI', 9), button_color=(COLORS['surface'], COLORS['accent']),
+                          border_width=0)],
+                [sg.Button(f"▶️ Play", key=f"-PLAY{i}-", size=(12, 1), 
+                          font=('Segoe UI', 9), button_color=(COLORS['surface'], COLORS['success']),
+                          border_width=0)]
+            ], element_justification='center', pad=(10, 5))
+        )
+    
+    for i in range(6, 11):  # Scripts 6-10
+        script_row2.append(
+            sg.Column([
+                [sg.Text(f"Script {i}", font=('Segoe UI', 10, 'bold'), 
+                        text_color=COLORS['text_primary'], justification='center')],
+                [sg.Button(f"📤 Upload", key=f"-UPLOAD{i}-", size=(12, 1), 
+                          font=('Segoe UI', 9), button_color=(COLORS['surface'], COLORS['accent']),
+                          border_width=0)],
+                [sg.Button(f"▶️ Play", key=f"-PLAY{i}-", size=(12, 1), 
+                          font=('Segoe UI', 9), button_color=(COLORS['surface'], COLORS['success']),
+                          border_width=0)]
+            ], element_justification='center', pad=(10, 5))
+        )
 
     layout = [
         [sg.Text("📜 Script Management System", font=('Segoe UI', 18, 'bold'), 
@@ -695,9 +693,11 @@ def script_mode():
         ], font=('Segoe UI', 12, 'bold'), title_color=COLORS['secondary'], 
            border_width=2, relief='solid', pad=(20, 15))],
         [sg.VPush()],
-        [sg.Frame('Script Slots', script_slots, 
-                 font=('Segoe UI', 12, 'bold'), title_color=COLORS['secondary'], 
-                 border_width=2, relief='solid', pad=(20, 15), element_justification='center')],
+        [sg.Frame('Script Slots', [
+            script_row1,
+            script_row2
+        ], font=('Segoe UI', 12, 'bold'), title_color=COLORS['secondary'], 
+           border_width=2, relief='solid', pad=(20, 15), element_justification='center')],
         [sg.VPush()],
         [sg.Button("← Back", key="-BACK-", size=(15, 2), 
                    font=('Segoe UI', 12), button_color=(COLORS['surface'], COLORS['text_secondary']),
